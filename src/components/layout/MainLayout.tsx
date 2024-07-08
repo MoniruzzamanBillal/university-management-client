@@ -1,60 +1,23 @@
-import { createElement } from "react";
-import {
-  UploadOutlined,
-  UserOutlined,
-  VideoCameraOutlined,
-} from "@ant-design/icons";
-import { Layout, Menu, MenuProps } from "antd";
-import { Outlet } from "react-router-dom";
-import { menuItem } from "../../routes/Admin.routes";
+import { Button, Layout } from "antd";
+import { Outlet, useNavigate } from "react-router-dom";
 
-const { Header, Content, Footer, Sider } = Layout;
+import Sidebar from "./Sidebar";
+import { useAppDispatch } from "../../redux/hook";
+import { logout } from "../../redux/features/auth/auth.slicer";
 
-const items2 = [
-  UserOutlined,
-  VideoCameraOutlined,
-  UploadOutlined,
-  UserOutlined,
-].map((icon, index) => ({
-  key: String(index + 1),
-  icon: createElement(icon),
-  label: `nav ${index + 1}`,
-}));
-
-const items: MenuProps["items"] = [
-  {
-    key: "test key 1",
-    label: "Dashboard",
-  },
-  {
-    key: "test key 2",
-    label: "profile",
-  },
-  {
-    key: "test key 3",
-    label: "users",
-  },
-  {
-    key: "test key 4",
-    label: "faculty",
-  },
-  {
-    key: "test key 5",
-    label: "manage course",
-    children: [
-      {
-        key: "child key 1",
-        label: "add course",
-      },
-      {
-        key: "child key 2",
-        label: "delete course",
-      },
-    ],
-  },
-];
+const { Header, Content, Footer } = Layout;
 
 const MainLayout = () => {
+  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+
+  // ! logout function
+  const handleLogout = () => {
+    console.log("logout click !!!");
+    dispatch(logout());
+    navigate("/login");
+  };
+
   return (
     <Layout
       style={{
@@ -62,35 +25,11 @@ const MainLayout = () => {
         width: "100%",
       }}
     >
-      <Sider
-        breakpoint="lg"
-        collapsedWidth="0"
-        onBreakpoint={(broken) => {
-          console.log(broken);
-        }}
-        onCollapse={(collapsed, type) => {
-          console.log(collapsed, type);
-        }}
-      >
-        <div
-          style={{
-            color: "white",
-            textAlign: "center",
-          }}
-        >
-          <h1>ph uni</h1>
-        </div>
-
-        <Menu
-          theme="dark"
-          mode="inline"
-          defaultSelectedKeys={["4"]}
-          // items={items}
-          items={menuItem}
-        />
-      </Sider>
+      <Sidebar />
       <Layout>
-        <Header style={{ padding: 0 }} />
+        <Header style={{ padding: 0 }}>
+          <Button onClick={() => handleLogout()}>Log out!</Button>
+        </Header>
         <Content style={{ margin: "24px 16px 0" }}>
           <div
             style={{
